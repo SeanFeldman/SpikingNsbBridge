@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Messages;
 using NServiceBus;
 
 namespace AsbEndpoint
@@ -17,6 +18,11 @@ namespace AsbEndpoint
             var connectionString = Environment.GetEnvironmentVariable("AzureServiceBus.ConnectionString");
             transport.ConnectionString(connectionString);
             transport.UseForwardingTopology();
+
+            var routing = transport.Routing();
+            // todo: document that requires NServiceBus.Bridge.Connector
+            var bridge = routing.ConnectToBridge("Bridge-Subscirber");
+            bridge.RegisterPublisher(typeof(MyEvent), "Publisher");
 
             var endpoint = await Endpoint.Start(configuration).ConfigureAwait(false);
 

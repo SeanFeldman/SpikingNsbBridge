@@ -30,8 +30,10 @@ namespace MsmqEndpoint
                 {
                     break;
                 }
-                await endpoint.Send(new MyCommand()).ConfigureAwait(false);
-                Console.WriteLine("Command sent");
+                //                await endpoint.Send(new MyCommand()).ConfigureAwait(false);
+                //                Console.WriteLine("Command sent");
+                await endpoint.Publish<MyEvent>(@event => { }).ConfigureAwait(false);
+                Console.WriteLine("Event sent");
             }
 
             await endpoint.Stop().ConfigureAwait(false);
