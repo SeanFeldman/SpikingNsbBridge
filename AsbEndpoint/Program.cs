@@ -21,7 +21,7 @@ namespace AsbEndpoint
 
             var routing = transport.Routing();
             // todo: document that requires NServiceBus.Bridge.Connector
-            var bridge = routing.ConnectToBridge("Bridge-Subscirber");
+            var bridge = routing.ConnectToBridge("Bridge-Subscriber");
             bridge.RegisterPublisher(typeof(MyEvent), "Publisher");
 
             var endpoint = await Endpoint.Start(configuration).ConfigureAwait(false);
