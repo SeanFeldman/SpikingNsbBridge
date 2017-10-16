@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using System.Transactions;
 using NServiceBus;
 
 namespace Bridge
@@ -16,6 +17,13 @@ namespace Bridge
                     transport.ConnectionString(connectionString);
                     transport.UseForwardingTopology();
                 });
+            bridgeConfiguration.InterceptForawrding(async (queue, message, forward) =>
+            {
+                using (new TransactionScope(TransactionScopeOption.Suppress, TransactionScopeAsyncFlowOption.Enabled))
+                {
+                    await forward().ConfigureAwait(false);
+                }
+            });
 
             bridgeConfiguration.AutoCreateQueues();
             bridgeConfiguration.UseSubscriptionPersistece<InMemoryPersistence>((configuration, persistence) => { });
